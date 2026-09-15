@@ -1,0 +1,21 @@
+merge_queue:
+  mode: serial
+queue_rules:
+  - name: VM2 preemption lineage queue
+    batch_size: 1
+    max_checks_retries: 1
+    queue_conditions: []
+    merge_conditions:
+      - check-success = vm2-fast-security
+      - check-success = vm2-slow-hold
+    merge_method: merge
+priority_rules:
+  - name: urgent
+    conditions:
+      - title = VM2_HIGH_PREEMPT
+    priority: high
+    allow_checks_interruption: true
+  - name: low
+    conditions:
+      - title = VM2_LOW_PREEMPT
+    priority: low

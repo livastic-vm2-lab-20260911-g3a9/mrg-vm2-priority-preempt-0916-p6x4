@@ -1,0 +1,38 @@
+name: VM2 Priority Preemption Lineage
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  fast_security:
+    name: vm2-fast-security
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Fail only on LOW+HIGH combined state
+        shell: bash
+        run: |
+          echo "head_ref=${{ github.head_ref }}"
+          find . -maxdepth 1 -type f -printf '%f\n' | sort
+          if [[ -f low.txt && -f high.txt ]]; then
+            echo VM2_PREEMPT_COMBINED_SECURITY_FAILURE
+            exit 1
+          fi
+          echo VM2_PREEMPT_FAST_SECURITY_PASS
+
+  slow_hold:
+    name: vm2-slow-hold
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Hold only the first LOW synthetic batch
+        shell: bash
+        run: |
+          echo "head_ref=${{ github.head_ref }} start=$(date -u +%FT%TZ)"
+          if [[ "${{ github.head_ref }}" == mergify/merge-queue/* && -f low.txt && ! -f high.txt ]]; then
+            echo VM2_PREEMPT_LOW_HOLD_START
+            sleep 180
+            echo VM2_PREEMPT_LOW_HOLD_END
+          fi
+          echo VM2_PREEMPT_SLOW_PASS
