@@ -1,14 +1,19 @@
 merge_queue:
   mode: serial
-  max_parallel_checks: 1
 
 queue_rules:
-  - name: VM2 fast-forward required-review parity hold
+  - name: VM2 staging permissive retarget source
     batch_size: 1
     queue_conditions:
-      - base = vm2-ff-review-base-0916
+      - base = staging
+    merge_conditions: []
+    merge_method: merge
+  - name: VM2 main impossible retarget destination
+    batch_size: 1
+    queue_conditions:
+      - base = main
     merge_conditions:
-      - check-success = vm2-ff-hold-never-0916
-    merge_method: fast-forward
+      - title = VM2_NEVER_MAIN_RETARGET_SUCCESS
+    merge_method: merge
 
 pull_request_rules: []
