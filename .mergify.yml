@@ -19,11 +19,3 @@ priority_rules:
     conditions:
       - title = VM2_LOW_PREEMPT
     priority: low
-pull_request_rules:
-  - name: VM2 hidden Markdown body policy end-to-end proof
-    conditions:
-      - body ~= VM2_MD_HASH_PAREN_TOKEN
-    actions:
-      comment:
-        message: VM2_HIDDEN_BODY_POLICY_TRIGGERED
-
