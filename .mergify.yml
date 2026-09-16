@@ -1,10 +1,19 @@
-pull_request_rules:
-  - name: VM2 current classic required deployment parity
-    conditions:
-      - base = vm2-classic-deploy-base-0916
-      - title = VM2_CLASSIC_REQUIRED_DEPLOY_CURRENT
-      - label = vm2-classic-deploy-trigger-0916
-    actions:
-      merge:
-        method: merge
-        merge_bot_account: livastic-vm2-primary-20260911
+merge_queue:
+  mode: serial
+
+queue_rules:
+  - name: VM2 staging permissive retarget source
+    batch_size: 1
+    queue_conditions:
+      - base = staging
+    merge_conditions: []
+    merge_method: merge
+  - name: VM2 main impossible retarget destination
+    batch_size: 1
+    queue_conditions:
+      - base = main
+    merge_conditions:
+      - title = VM2_NEVER_MAIN_RETARGET_SUCCESS
+    merge_method: merge
+
+pull_request_rules: []
