@@ -30,7 +30,11 @@ jobs:
         shell: bash
         run: |
           echo "head_ref=${{ github.head_ref }} start=$(date -u +%FT%TZ)"
-          if [[ "${{ github.head_ref }}" == mergify/merge-queue/* && -f low.txt && ! -f high.txt ]]; then
+          if [[ "${{ github.head_ref }}" == mergify/merge-queue/* && -f freeze-probe.txt ]]; then
+            echo VM2_FREEZE_PROBE_HOLD_START
+            sleep 90
+            echo VM2_FREEZE_PROBE_HOLD_END
+          elif [[ "${{ github.head_ref }}" == mergify/merge-queue/* && -f low.txt && ! -f high.txt ]]; then
             echo VM2_PREEMPT_LOW_HOLD_START
             sleep 180
             echo VM2_PREEMPT_LOW_HOLD_END
