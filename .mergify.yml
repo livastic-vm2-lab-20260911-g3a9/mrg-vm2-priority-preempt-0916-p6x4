@@ -1,21 +1,16 @@
 merge_queue:
   mode: serial
+
+commands_restrictions:
+  queue:
+    conditions:
+      - sender = {{author}}
+
 queue_rules:
-  - name: VM2 preemption lineage queue
+  - name: VM2 per-PR command restriction isolation
     batch_size: 1
-    max_checks_retries: 1
     queue_conditions: []
-    merge_conditions:
-      - check-success = vm2-fast-security
-      - check-success = vm2-slow-hold
+    merge_conditions: []
     merge_method: merge
-priority_rules:
-  - name: urgent
-    conditions:
-      - title = VM2_HIGH_PREEMPT
-    priority: high
-    allow_checks_interruption: true
-  - name: low
-    conditions:
-      - title = VM2_LOW_PREEMPT
-    priority: low
+
+pull_request_rules: []
